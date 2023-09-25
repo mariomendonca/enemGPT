@@ -8,7 +8,7 @@ type Question = {
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      {data.map((question: Question, index: number) => (
+      {Array.isArray(data) && data.map((question: Question, index: number) => (
         <Link href={`/question/${index}`} key={index.toString()}>
           <p>({index + 1}) área: {question.area}</p>
         </Link>

@@ -6,13 +6,11 @@ const openai = new OpenAI({
 })
 
 export async function doCompletion(prompt: string) {
-  console.log(prompt)
   const completion = await openai.completions.create({
     model: "gpt-3.5-turbo-instruct",
     prompt: `me explique essa questão de prova ${prompt}`,
     temperature: 0,
     max_tokens: 500
   })
-  console.log(completion)
   return completion
 }
