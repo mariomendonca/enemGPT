@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import data from './enem_questoes.json'
 
 type Question = {
@@ -8,9 +9,9 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       {data.map((question: Question, index: number) => (
-        <div key={index.toString()}>
+        <Link href={`/question/${index}`} key={index.toString()}>
           <p>({index + 1}) área: {question.area}</p>
-        </div>
+        </Link>
       ))}
     </main>
   )
