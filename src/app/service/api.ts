@@ -5,7 +5,8 @@ const openai = new OpenAI({
   dangerouslyAllowBrowser: true
 })
 
-export async function doCompletion(prompt: string) {
+export async function doCompletion(prompt?: string) {
+  if (!prompt) throw new Error('prompt must be provided')
   const completion = await openai.completions.create({
     model: "gpt-3.5-turbo-instruct",
     prompt: `me explique essa questão de prova ${prompt}`,
