@@ -14,7 +14,7 @@ export default function Question({ params }: { params: { id: string } }) {
   const [completion, setCompletion] = useState('')
   const [isLoading, setIsLoading] = useState(true)
 
-  const question = Array.isArray(data) && data[Number(id)].enunciado
+  const question = Array.isArray(data) ? data[Number(id)].enunciado : ''
 
   useEffect(() => {
     async function handleDoCompletion() {
