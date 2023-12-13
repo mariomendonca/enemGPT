@@ -18,7 +18,9 @@ export default function Home() {
       alert("Eamil e senha precisam estar preenchidos")
     }
     try {
-      await doLogin(email, password)
+      const response = await doLogin(email, password)
+      console.log(response.data)
+      localStorage.setItem('user', JSON.stringify(response.data))
       router.push('/home')
 
     } catch {

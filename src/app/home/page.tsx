@@ -1,6 +1,6 @@
 'use client'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -8,6 +8,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 
 import data from '../enem_questoes.json'
+import { User } from '@prisma/client'
 
 type Question = {
   area: string
@@ -19,12 +20,31 @@ export default function Home() {
   const [language, setLanguage] = useState(true)
   const [history, setHistory] = useState(true)
   const [natural, setNatural] = useState(true)
+  const [user, setUser] = useState<{
+    id: string
+    name: string
+    email: string
+    password: string
+  }>()
+
+  useEffect(() => {
+    const getUser = localStorage.getItem('user')
+    console.log(getUser)
+    if (!getUser) return
+
+    setUser(JSON.parse(getUser))
+  }, [])
 
   return (
     <main className="min-h-screen px-6 py-4 md:px-20 md:py-10 flex flex-col">
       <div className='flex items-center justify-between'>
-        <h1 className='font-bold text-3xl'>EnemGPT</h1>
+        <div className='flex flex-col'>
+          <h1 className='font-bold text-3xl'>EnemGPT</h1>
+          {user && (
+            <span className='mt-4 font-medium text-xl'>Olá <span className='font-bold'>{user.name}</span>, qual questão você deseja ver?</span>
+          )}
 
+        </div>
         <Popover>
           <PopoverTrigger asChild>
             <Button variant={'outline'}>Filtrar</Button>
