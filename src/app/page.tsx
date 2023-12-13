@@ -1,64 +1,44 @@
 'use client'
-import Link from 'next/link'
-import { useState } from 'react'
 
 import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
-import { Checkbox } from '@/components/ui/checkbox'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-
-import data from './enem_questoes.json'
-
-type Question = {
-  area: string
-  enunciado: string
-}
+import { Input } from '@/components/ui/input'
+import Link from 'next/link'
+import { useState } from 'react'
+import { doLogin } from './service/users'
+import { useRouter } from 'next/navigation'
 
 export default function Home() {
-  const [math, setMath] = useState(true)
-  const [language, setLanguage] = useState(true)
-  const [history, setHistory] = useState(true)
-  const [natural, setNatural] = useState(true)
+  const router = useRouter()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+
+  async function handleLogin() {
+    if (!email || !password) {
+      alert("Eamil e senha precisam estar preenchidos")
+    }
+    try {
+      await doLogin(email, password)
+      router.push('/home')
+
+    } catch {
+      alert("Algo de errado aconteceu")
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   return (
-    <main className="min-h-screen px-6 py-4 md:px-20 md:py-10 flex flex-col">
-      <div className='flex items-center justify-between'>
-        <h1 className='font-bold text-3xl'>EnemGPT</h1>
+    <main className="min-h-screen px-6 py-4 md:px-20 md:py-10 flex items-center justify-center">
+      <div className='border-gray-600 border-2 border-solid px-8 py-16 rounded-lg'>
 
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button variant={'outline'}>Filtrar</Button>
-          </PopoverTrigger>
-
-          <PopoverContent>
-            <div className='p-1 flex items-center space-x-2'>
-              <Checkbox id='checkMath' onCheckedChange={() => setMath(!math)} checked={math} />
-              <label htmlFor="checkMath">Matemática</label>
-            </div>
-            <div className='p-1 flex items-center space-x-2'>
-              <Checkbox id='checkHistory' onCheckedChange={() => setHistory(!history)} checked={history} />
-              <label htmlFor="checkHistory">Ciências Humanas</label>
-            </div>
-            <div className='p-1 flex items-center space-x-2'>
-              <Checkbox id='checkLang' onCheckedChange={() => setLanguage(!language)} checked={language} />
-              <label htmlFor="checkLang">Linguagens e Códigos</label>
-            </div>
-            <div className='p-1 flex items-center space-x-2'>
-              <Checkbox id='checkNatural' onCheckedChange={() => setNatural(!natural)} checked={natural} />
-              <label htmlFor="checkNatural">Ciências da Natureza</label>
-            </div>
-          </PopoverContent>
-        </Popover>
-      </div>
-
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 mt-4">
-        {Array.isArray(data) && data.map((question: Question, index: number) => (
-          <Link href={`/question/${index}`} key={index.toString()} className='col-span-1'>
-            <Card className='px-2 py-1 md:px-3 md:py-2'>
-              <span>({index + 1}) área: {question.area}</span>
-            </Card>
-          </Link>
-        ))}
+        <div className='w-96 flex flex-col items-center'>
+          <h1 className='font-bold text-3xl mb-16'>EnemGPT - Login</h1>
+          <Input style={{ marginBottom: 16 }} placeholder='Email' onChange={e => setEmail(e.target.value)} />
+          <Input type='password' style={{ marginBottom: 32 }} placeholder='Senha' onChange={e => setPassword(e.target.value)} />
+          <Button className='w-full' onClick={handleLogin}>{isLoading ? 'Carregando...' : 'Entrar'}</Button>
+          <Link href={"/register"} className='mt-3'>nao possui conta? criar</Link>
+        </div>
       </div>
     </main>
   )
